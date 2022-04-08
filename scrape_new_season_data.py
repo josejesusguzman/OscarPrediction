@@ -59,6 +59,7 @@ def get_RT_ratings(movie_title):
         url_list = sorted([(movie_dict['url'], movie_dict['year']) for movie_dict in search_res['movies']],
                           key=lambda x: x[1], reverse=True)
         url = url_list[0][0]
+        
         print(f'No exact match found. Going with {url}')
     # More than one exact match - return the latest one
     elif len(url_list) > 1:
@@ -66,12 +67,22 @@ def get_RT_ratings(movie_title):
                            if movie_dict['name'].lower() == movie_title.lower()],
                           key=lambda x: x[1], reverse=True)
         url = url_list[0][0]
+        if movie_title == 'Don\'t Look Up' :
+            url = '/m/dont_look_up_2021'
         print(f'More than one exact match found. Going with {url}')
 
     movie_scraper = MovieScraper(movie_url='https://www.rottentomatoes.com' + url)
     movie_scraper.extract_metadata()
-    rt_critics_score = int(movie_scraper.metadata['Score_Rotten'])
-    rt_audience_score = int(movie_scraper.metadata['Score_Audience'])
+    if not movie_scraper.metadata['Score_Rotten'] :
+        rt_critics_score = 0
+    else :
+        rt_critics_score = int(movie_scraper.metadata['Score_Rotten'])
+
+    if not movie_scraper.metadata['Score_Audience'] :
+        rt_audience_score = 0
+    else :
+        rt_audience_score = int(movie_scraper.metadata['Score_Rotten'])
+
     return rt_critics_score, rt_audience_score
 
 
@@ -884,7 +895,7 @@ def create_newseason_director_dataframe(nominated_movies, nominated_directors, n
 """ Main run function """
 
 
-def run(new_season='2021'):
+def run(new_season='2022'):
     # Load new season nominations
     df = pd.read_excel(f'data/nominations_{new_season}.xlsx')
     # Get (scrape) data
@@ -897,4 +908,4 @@ def run(new_season='2021'):
     create_newseason_director_dataframe(nominated_movies, nominated_directors, new_season=new_season, suffix='-auto')
 
 
-run('2021')
+run('2022')
