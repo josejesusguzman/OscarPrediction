@@ -18,7 +18,7 @@ import os
 pd.set_option('display.max_columns', 20)
 
 
-def training_prediction_split(new_season='2020', data_folder='data/', predictor_set='model_1'):
+def training_prediction_split(new_season='2022', data_folder='data/', predictor_set='model_1'):
     """
     Returns training X and y matrices and prediction test matrix for new season.
 
@@ -156,4 +156,4 @@ def run(new_season):
         prediction_df.to_csv(f'results/all_predictions_{model}_{new_season}.csv', index=False)
 
 
-run('2021')
+run('2022')
